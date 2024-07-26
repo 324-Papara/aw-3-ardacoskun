@@ -1,5 +1,6 @@
 using System.Reflection;
 using System.Text.Json.Serialization;
+using Autofac;
 using AutoMapper;
 using FluentValidation.AspNetCore;
 using MediatR;
@@ -38,12 +39,10 @@ public class Startup
             c.SwaggerDoc("v1", new OpenApiInfo { Title = "Para.Api", Version = "v1" });
         });
 
-        var connectionStringSql = Configuration.GetConnectionString("MsSqlConnection");
-        services.AddDbContext<ParaDbContext>(options => options.UseSqlServer(connectionStringSql));
+        //var connectionStringSql = Configuration.GetConnectionString("MsSqlConnection");
+        //services.AddDbContext<ParaDbContext>(options => options.UseSqlServer(connectionStringSql));
         //services.AddDbContext<ParaDbContext>(options => options.UseNpgsql(connectionStringPostgre));
-  
-
-        services.AddScoped<IUnitOfWork, UnitOfWork>();
+        //services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         var config = new MapperConfiguration(cfg =>
         {
@@ -69,9 +68,10 @@ public class Startup
         }
 
 
+        app.UseMiddleware<LoggerMiddleware>();
         app.UseMiddleware<HeartbeatMiddleware>();
         app.UseMiddleware<ErrorHandlerMiddleware>();
-        
+
         app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
