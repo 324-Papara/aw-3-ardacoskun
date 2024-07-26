@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Para.Bussiness.Cqrs;
 using Para.Bussiness.Validations;
 using Para.Data.Context;
+using Para.Data.DapperRepository;
 using Para.Data.UnitOfWork;
 
 public  class AutofacBusinessModule: Module
@@ -19,6 +20,8 @@ public  class AutofacBusinessModule: Module
         // Register all implemented interfaces from the assembly containing CreateCustomerCommand
         builder.RegisterAssemblyTypes(typeof(CreateCustomerCommand).Assembly)
                .AsImplementedInterfaces();
+
+        builder.RegisterType<CustomerRepository>().SingleInstance();
 
         // Register DbContext with configuration for SQL Server
         builder.Register(c =>
